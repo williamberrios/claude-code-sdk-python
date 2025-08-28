@@ -52,7 +52,10 @@ def parse_message(data: dict[str, Any]) -> Message:
                         match block["type"]:
                             case "text":
                                 user_content_blocks.append(
-                                    TextBlock(text=block["text"])
+                                    TextBlock(text=block["text"],
+                                              id=data.get("id"),
+                                              parent_tool_use_id=data.get("parent_tool_use_id"),
+                                              session_id=data.get("session_id"))
                                 )
                             case "tool_use":
                                 user_content_blocks.append(
@@ -60,6 +63,8 @@ def parse_message(data: dict[str, Any]) -> Message:
                                         id=block["id"],
                                         name=block["name"],
                                         input=block["input"],
+                                        parent_tool_use_id=data.get("parent_tool_use_id"),
+                                        session_id=data.get("session_id")
                                     )
                                 )
                             case "tool_result":
@@ -68,6 +73,8 @@ def parse_message(data: dict[str, Any]) -> Message:
                                         tool_use_id=block["tool_use_id"],
                                         content=block.get("content"),
                                         is_error=block.get("is_error"),
+                                        parent_tool_use_id=data.get("parent_tool_use_id"),
+                                        session_id=data.get("session_id")
                                     )
                                 )
                     return UserMessage(content=user_content_blocks)
@@ -83,12 +90,18 @@ def parse_message(data: dict[str, Any]) -> Message:
                 for block in data["message"]["content"]:
                     match block["type"]:
                         case "text":
-                            content_blocks.append(TextBlock(text=block["text"]))
+                            content_blocks.append(TextBlock(text=block["text"],
+                                                            id=block.get("id"),
+                                                            parent_tool_use_id=data.get("parent_tool_use_id"),
+                                                            session_id=data.get("session_id")))
                         case "thinking":
                             content_blocks.append(
                                 ThinkingBlock(
                                     thinking=block["thinking"],
                                     signature=block["signature"],
+                                    id=block.get("id"),
+                                    parent_tool_use_id=data.get("parent_tool_use_id"),
+                                    session_id=data.get("session_id")
                                 )
                             )
                         case "tool_use":
@@ -97,6 +110,8 @@ def parse_message(data: dict[str, Any]) -> Message:
                                     id=block["id"],
                                     name=block["name"],
                                     input=block["input"],
+                                    parent_tool_use_id=data.get("parent_tool_use_id"),
+                                    session_id=data.get("session_id")
                                 )
                             )
                         case "tool_result":
@@ -105,6 +120,9 @@ def parse_message(data: dict[str, Any]) -> Message:
                                     tool_use_id=block["tool_use_id"],
                                     content=block.get("content"),
                                     is_error=block.get("is_error"),
+                                    id=block.get("id"),
+                                    parent_tool_use_id=data.get("parent_tool_use_id"),
+                                    session_id=data.get("session_id")
                                 )
                             )
 

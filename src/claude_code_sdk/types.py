@@ -45,6 +45,10 @@ class TextBlock:
     """Text content block."""
 
     text: str
+    id: str | None = None
+    parent_tool_use_id: str | None = None
+    session_id: str | None = None
+
 
 
 @dataclass
@@ -53,6 +57,9 @@ class ThinkingBlock:
 
     thinking: str
     signature: str
+    id: str | None = None
+    parent_tool_use_id: str | None = None
+    session_id: str | None = None
 
 
 @dataclass
@@ -62,6 +69,8 @@ class ToolUseBlock:
     id: str
     name: str
     input: dict[str, Any]
+    parent_tool_use_id: str | None = None
+    session_id: str | None = None
 
 
 @dataclass
@@ -71,6 +80,8 @@ class ToolResultBlock:
     tool_use_id: str
     content: str | list[dict[str, Any]] | None = None
     is_error: bool | None = None
+    parent_tool_use_id: str | None = None
+    session_id: str | None = None
 
 
 ContentBlock = TextBlock | ThinkingBlock | ToolUseBlock | ToolResultBlock
